@@ -11,7 +11,9 @@ class Middlewareable(Generic[TRequest]):
         self._instantiate_middlewares()
 
     def _instantiate_middlewares(self) -> None:
-        self.middleware_instances = [middleware() for middleware in self.middlewares]
+        self.middleware_instances = [
+            middleware() for middleware in self.middlewares
+        ]
 
     async def process_middlewares(
         self,

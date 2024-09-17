@@ -1,5 +1,5 @@
 {
-  "name": "Library python-restclient",
+  "name": "Library python-middlewareable",
   "dockerComposeFile": [
     "../docker/local/docker-compose.yml"
   ],
@@ -18,7 +18,9 @@
         "DavidAnson.vscode-markdownlint",
         "GitHub.copilot",
         "GitHub.copilot-chat",
-        "mikestead.dotenv"
+        "mikestead.dotenv",
+        "ms-python.flake8",
+        "tamasfe.even-better-toml"
       ],
       "settings": {
         "terminal.integrated.shell.linux": "/bin/bash",
@@ -26,11 +28,18 @@
         "indentRainbow.indicatorStyle": "light",
         "editor.formatOnSave": true,
         "python.condaPath": "/opt/conda/bin/conda",
-        "python.defaultInterpreterPath": "/opt/conda/envs/myenv/bin/python",
+        "python.defaultInterpreterPath": "/opt/conda/envs/venv/bin/python",
         "python.analysis.autoImportCompletions": true,
         "python.analysis.typeCheckingMode": "strict",
         "python.analysis.diagnosticMode": "workspace",
-        "explorer.sortOrderLexicographicOptions": "upper"
+        "explorer.sortOrderLexicographicOptions": "upper",
+        "[toml]": {
+          "editor.defaultFormatter": "tamasfe.even-better-toml",
+          "editor.formatOnSave": true
+        },
+        "[markdown]": {
+          "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+        }
       }
     }
   },

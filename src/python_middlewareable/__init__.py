@@ -17,6 +17,13 @@ from .traits.data_structurable.dtos.transport_data import (
 )
 from .traits.auto_instantiable.auto_instantiable import AutoInstantiable
 
+# Version of the package
+# DO NOT MODIFY MANUALLY
+# This will be updated by `bumpver` command.
+# - Make sure to commit all changes first before running `bumpver`.
+# - Run `bumpver update --[minor|major|patch]`
+__version__ = "1.0.0"
+
 __all__ = [
     # Core
     "MiddlewareBase",

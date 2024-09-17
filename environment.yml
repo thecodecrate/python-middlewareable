@@ -1,4 +1,4 @@
-name: myenv
+name: venv
 channels:
   - defaults
   - conda-forge
@@ -12,3 +12,8 @@ dependencies:
     - pytest
     - pytest-asyncio
     - pytest-cov
+    # tool for updating semantic versioning over multiple files
+    - bumpver
+    # tools for building package for PyPI
+    - build
+    - twine

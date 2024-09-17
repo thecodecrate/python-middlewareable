@@ -1,7 +1,9 @@
 from dataclasses import dataclass
-from src.middleware import Middleware as MiddlewareBase
-from src.middleware import MiddlewareNextCall as MiddlewareNextCallBase
-from src.request import Request as RequestBase
+from python_middlewareable import (
+    MiddlewareBase,
+    MiddlewareNextCallBase,
+    RequestBase,
+)
 
 
 @dataclass
