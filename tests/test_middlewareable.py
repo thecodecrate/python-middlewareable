@@ -1,11 +1,11 @@
 import pytest
 from _pytest.capture import CaptureFixture
+from python_middlewareable import MiddlewareableBase
 from tests.stubs.fake_basic_middlewares import (
     Request,
     OneMiddleware,
     TwoMiddleware,
 )
-from src.middlewareable import Middlewareable as MiddlewareableBase
 from tests.stubs.fake_http_middlewares import (
     AddHeaderMiddleware,
     HttpMiddlewareable,
@@ -21,7 +21,9 @@ async def test_basic_usage_instructions():
 
     app = App()
     result = await app.process_middlewares(Request(name="John"))
-    assert result.response == "Hello, John from OneMiddleware from TwoMiddleware"
+    assert (
+        result.response == "Hello, John from OneMiddleware from TwoMiddleware"
+    )
 
 
 @pytest.mark.asyncio
@@ -47,7 +49,8 @@ async def test_middleware_print_output(capsys: CaptureFixture[str]) -> None:
         "OneMiddleware after",
     ]
 
-    # Split the captured output into lines and compare with the expected sequence
+    # Split the captured output into lines and compare with the expected
+    # sequence
     output_lines = captured.out.strip().splitlines()
 
     assert output_lines == expected_output

@@ -2,9 +2,15 @@
 
 A simple library for working with middlewares in Python.
 
+## Installation
+
+```bash
+pip install python-middlewareable
+```
+
 ## Usage
 
-### 1. Define the payload structure
+### 1. Define a payload structure
 
 ```python
 @dataclass
@@ -54,5 +60,11 @@ print(request)
 
 ## Traits
 
-- [AutoInstantiable](src/traits/auto_instantiable/README.md)
-- [DataStructurable](src/traits/data_structurable/README.md)
+You can use the following traits to extend the functionality of your classes:
+
+- [AutoInstantiable](src/python_middlewareable/traits/auto_instantiable)
+- [DataStructurable](src/python_middlewareable/traits/data_structurable)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

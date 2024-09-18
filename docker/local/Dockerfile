@@ -1,15 +1,29 @@
-# Use Debian as base image
-FROM debian:bookworm-slim
+# The base image
+FROM ubuntu:24.04
+
+###
+# If you need "docker-in-docker" feature, use this Debian base image:
+# ```
+# FROM debian:bookworm-slim
+# ```
+#
+# Then, add to `devcontainer.json`:
+# ```
+# "features": {
+#     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+# }
+# ```
+###
 
 # The name of the Conda environment to create
-ARG CONDA_ENV_NAME=myenv
+ARG CONDA_ENV_NAME=venv
 ENV CONDA_ENV_NAME=${CONDA_ENV_NAME}
 
 # The version of Node.js to install
 ARG NODE_VERSION=20
 
 # Set the PYTHONPATH
-ENV PYTHONPATH=/app:/app/jupyter:/app/jupyter/lib:$PYTHONPATH
+ENV PYTHONPATH=/app:/app/jupyter:/app/src:$PYTHONPATH
 
 # Install git, wget, supervisor, etc.
 RUN apt-get update \

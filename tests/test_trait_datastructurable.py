@@ -5,10 +5,10 @@ from tests.stubs.fake_datastructurable_trait import (
     Request,
     OneMiddleware,
 )
-from src.middlewareable import Middlewareable as MiddlewareableBase
-from src.traits.data_structurable.data_structurable import DataStructurable
-from src.traits.data_structurable.dtos.transport_data import (
-    TransportData as TransportDataBase,
+from python_middlewareable import (
+    MiddlewareableBase,
+    DataStructurable,
+    TransportDataBase,
 )
 
 
