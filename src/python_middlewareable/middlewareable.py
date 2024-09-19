@@ -27,9 +27,7 @@ class Middlewareable(Generic[TRequest]):
 
         middleware = self.middleware_instances[index]
 
-        async def next_call(request: TRequest) -> None:
-            await self.process_middlewares(request, index + 1)
+        async def next_call(request: TRequest) -> TRequest:
+            return await self.process_middlewares(request, index + 1)
 
-        await middleware.handle(request, next_call)
-
-        return request
+        return await middleware.handle(request, next_call)

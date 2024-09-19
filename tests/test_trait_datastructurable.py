@@ -1,6 +1,6 @@
 import pytest
 from tests.stubs.fake_datastructurable_trait import (
-    PayloadData,
+    RequestData,
     ResponseData,
     Request,
     OneMiddleware,
@@ -21,7 +21,7 @@ async def test_trait_datastructurable_instructions():
 
     # request
     request = Request(
-        request_data=PayloadData(name="John"),
+        request_data=RequestData(name="John"),
         response_data=ResponseData(),
         transport_data=TransportDataBase(),
     )

@@ -6,12 +6,6 @@ from tests.stubs.fake_basic_middlewares import (
     OneMiddleware,
     TwoMiddleware,
 )
-from tests.stubs.fake_http_middlewares import (
-    AddHeaderMiddleware,
-    HttpMiddlewareable,
-    HttpRequest,
-    ModifyMethodMiddleware,
-)
 
 
 @pytest.mark.asyncio
@@ -20,14 +14,14 @@ async def test_basic_usage_instructions():
         middlewares = [OneMiddleware, TwoMiddleware]
 
     app = App()
-    result = await app.process_middlewares(Request(name="John"))
-    assert (
-        result.response == "Hello, John from OneMiddleware from TwoMiddleware"
-    )
+
+    result = await app.process_middlewares(Request(value="John"))
+
+    assert result.value == "Hello, John from OneMiddleware from TwoMiddleware"
 
 
 @pytest.mark.asyncio
-async def test_middleware_print_output(capsys: CaptureFixture[str]) -> None:
+async def test_execution_order(capsys: CaptureFixture[str]) -> None:
     class App(MiddlewareableBase[Request]):
         middlewares = [OneMiddleware, TwoMiddleware]
 
@@ -35,7 +29,7 @@ async def test_middleware_print_output(capsys: CaptureFixture[str]) -> None:
     app = App()
 
     # Process the request
-    request = Request(name="John")
+    request = Request(value="John")
     await app.process_middlewares(request)
 
     # Capture the output
@@ -57,29 +51,19 @@ async def test_middleware_print_output(capsys: CaptureFixture[str]) -> None:
 
 
 @pytest.mark.asyncio
-async def test_basic_middleware_chain():
-    class HttpMiddlewareableWithMiddlewares(HttpMiddlewareable):
-        middlewares = [AddHeaderMiddleware, ModifyMethodMiddleware]
+async def test_append_middlewares_dynamically():
+    class App(MiddlewareableBase[Request]):
+        pass
 
-    app = HttpMiddlewareableWithMiddlewares()
+    app = App()
 
-    initial_request = HttpRequest(method="GET", headers={})
+    app.middleware_instances.append(OneMiddleware())
+    app.middleware_instances.append(TwoMiddleware())
+
+    initial_request = Request(value="John")
     processed_request = await app.process_middlewares(initial_request)
 
-    assert processed_request.method == "POST"
-    assert "X-Test" in processed_request.headers
-    assert processed_request.headers["X-Test"] == "True"
-
-
-@pytest.mark.asyncio
-async def test_append_middlewares_at_runtime():
-    app = HttpMiddlewareable()
-    app.middleware_instances.append(AddHeaderMiddleware())
-    app.middleware_instances.append(ModifyMethodMiddleware())
-
-    initial_request = HttpRequest(method="GET", headers={})
-    processed_request = await app.process_middlewares(initial_request)
-
-    assert processed_request.method == "POST"
-    assert "X-Test" in processed_request.headers
-    assert processed_request.headers["X-Test"] == "True"
+    assert (
+        processed_request.value
+        == "Hello, John from OneMiddleware from TwoMiddleware"
+    )

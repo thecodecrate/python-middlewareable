@@ -8,33 +8,34 @@ from python_middlewareable import (
 
 @dataclass
 class Request(RequestBase):
-    name: str
-    response: str = ""
+    value: str
 
 
 class OneMiddleware(MiddlewareBase[Request]):
     async def handle(
         self, request: Request, next_call: MiddlewareNextCallBase[Request]
-    ) -> None:
+    ) -> Request:
         print("OneMiddleware before")
 
-        request.response = f"Hello, {request.name}"
+        request.value = f"Hello, {request.value} from OneMiddleware"
 
-        request.response += " from OneMiddleware"
-
-        await next_call(request)
+        result = await next_call(request)
 
         print("OneMiddleware after")
+
+        return result
 
 
 class TwoMiddleware(MiddlewareBase[Request]):
     async def handle(
         self, request: Request, next_call: MiddlewareNextCallBase[Request]
-    ) -> None:
+    ) -> Request:
         print("TwoMiddleware before")
 
-        request.response += " from TwoMiddleware"
+        request.value += " from TwoMiddleware"
 
-        await next_call(request)
+        result = await next_call(request)
 
         print("TwoMiddleware after")
+
+        return result

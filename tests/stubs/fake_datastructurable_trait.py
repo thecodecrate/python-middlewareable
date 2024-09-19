@@ -11,7 +11,7 @@ from python_middlewareable import (
 
 
 @dataclass
-class PayloadData(RequestDataBase):  # inherit from RequestDataBase
+class RequestData(RequestDataBase):  # inherit from RequestDataBase
     name: str
 
 
@@ -22,7 +22,7 @@ class ResponseData(ResponseDataBase):  # inherit from ResponseDataBase
 
 @dataclass
 class Request(
-    DataStructurableRequestMixin[PayloadData, ResponseData, TransportDataBase],
+    DataStructurableRequestMixin[RequestData, ResponseData, TransportDataBase],
     RequestBase,
 ):
     pass
@@ -31,9 +31,9 @@ class Request(
 class OneMiddleware(MiddlewareBase[Request]):
     async def handle(
         self, request: Request, next_call: MiddlewareNextCallBase[Request]
-    ) -> None:
+    ) -> Request:
         request.response_data.value += (
             request.request_data.name + " from OneMiddleware"
         )
 
-        await next_call(request)
+        return await next_call(request)
