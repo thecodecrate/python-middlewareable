@@ -20,7 +20,8 @@
         "GitHub.copilot-chat",
         "mikestead.dotenv",
         "ms-python.flake8",
-        "tamasfe.even-better-toml"
+        "tamasfe.even-better-toml",
+        "github.vscode-github-actions"
       ],
       "settings": {
         "terminal.integrated.shell.linux": "/bin/bash",
