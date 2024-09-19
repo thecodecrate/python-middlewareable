@@ -2,7 +2,7 @@
 line-length = 79
 
 [build-system]
-requires = ["setuptools>=70.0.0", "wheel"]
+requires = ["setuptools>=68.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -16,8 +16,6 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -33,11 +31,19 @@ keywords = [
     "python-middleware",
 ]
 dependencies = []
-requires-python = ">=3.7"
+requires-python = ">=3.9"
 
 [project.optional-dependencies]
 build = ["build", "twine"]
-dev = ["black", "bumpver", "isort", "flake8", "pytest"]
+dev = [
+    "black",
+    "bumpver",
+    "isort",
+    "flake8",
+    "pytest",
+    "pytest-cov",
+    "pytest-asyncio",
+]
 
 [project.urls]
 repository = "https://github.com/thecodecrate/python-middlewareable"

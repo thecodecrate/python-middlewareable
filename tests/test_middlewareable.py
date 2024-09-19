@@ -2,10 +2,26 @@ import pytest
 from _pytest.capture import CaptureFixture
 from python_middlewareable import MiddlewareableBase
 from tests.stubs.fake_basic_middlewares import (
+    MiddlewareBase,
     Request,
     OneMiddleware,
     TwoMiddleware,
 )
+
+
+@pytest.mark.asyncio
+async def test_default_middleware():
+    class MyMiddleware(MiddlewareBase[Request]):
+        pass
+
+    class App(MiddlewareableBase[Request]):
+        middlewares = [MyMiddleware]
+
+    app = App()
+
+    result = await app.process_middlewares(Request(value="Hello"))
+
+    assert result.value == "Hello"
 
 
 @pytest.mark.asyncio
