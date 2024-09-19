@@ -1,8 +1,8 @@
-# `AutoInstantiable` Trait
+# `AutoStructurable` Trait
 
-The `AutoInstantiable` trait is a helper built on top of the `DataStructurable` trait. It allows you to process middlewares using a payload data directly, without the need to create a request object manually.
+The `AutoStructurable` trait is a helper built on top of the `DataStructurable` trait. It allows you to process middlewares using a payload data directly, without the need to create a request object manually.
 
-The `AutoInstantiable` trait adds a `process_middlewares_from_payload` method to the class.
+The `AutoStructurable` trait adds a `process_middlewares_from_payload` method to the class.
 
 **Example:**
 
@@ -17,13 +17,13 @@ The `process_middlewares_from_payload` method automatically creates a new reques
 ### 1. Implement as you would with `DataStructurable`
 
 ```python
-# define the payload structure
+# define a payload structure
 @dataclass
-class PayloadData(RequestDataBase):  # inherit from RequestDataBase
+class RequestData(RequestDataBase):  # inherit from RequestDataBase
     name: str
 
 
-# define the response structure
+# define a response structure
 @dataclass
 class ResponseData(ResponseDataBase):  # inherit from ResponseDataBase
     value: str = ""
@@ -32,7 +32,7 @@ class ResponseData(ResponseDataBase):  # inherit from ResponseDataBase
 # add the `DataStructurableRequestMixin` to the request class
 @dataclass
 class Request(
-    DataStructurableRequestMixin[PayloadData, ResponseData, TransportDataBase],
+    DataStructurableRequestMixin[RequestData, ResponseData, TransportDataBase],
     RequestBase,
 ):
     pass
@@ -42,28 +42,30 @@ class Request(
 class OneMiddleware(MiddlewareBase[Request]):
     async def handle(
         self, request: Request, next_call: MiddlewareNextCallBase[Request]
-    ) -> None:
-        await next_call(request)
-
+    ) -> Request:
         request.response_data.value += request.request_data.name + " from OneMiddleware"
+
+        result = await next_call(request)
+
+        return result
 ```
 
-### 2. Add `AutoInstantiable` to the middlewareable
+### 2. Add `AutoStructurable` to the middlewareable
 
 ```python
 class App(
-    AutoInstantiable[Request, ResponseData, TransportDataBase],
+    AutoStructurable[Request, ResponseData, TransportDataBase],
     MiddlewareableBase[Request],
 ):
     middlewares = [OneMiddleware]
 
-    # same classes passed to "AutoInstantiable" above
+    # same classes passed to "AutoStructurable" above
     request_class = Request
     response_data_class = ResponseData
     transport_data_class = TransportDataBase
 ```
 
-**NOTE:** `AutoInstantiable` automatically adds the `DataStructurable` trait to the class.
+**NOTE:** `AutoStructurable` automatically adds the `DataStructurable` trait to the class.
 
 ### 3. Instantiate and use it
 
@@ -72,7 +74,7 @@ class App(
 app = App()
 
 # process request
-result = await app.process_middlewares_from_payload(data=PayloadData(name="John"))
+result = await app.process_middlewares_from_payload(data=RequestData(name="John"))
 
 # check the result
 print(result)

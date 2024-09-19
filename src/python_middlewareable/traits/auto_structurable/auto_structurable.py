@@ -8,7 +8,7 @@ from ..data_structurable.dtos.transport_data import TTransportData
 from ..data_structurable.mixins.request_mixin import TRequest
 
 
-class AutoInstantiable(
+class AutoStructurable(
     DataStructurable,
     Generic[TRequest, TResponseData, TTransportData],
 ):

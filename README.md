@@ -68,9 +68,9 @@ print(request)
 
 ## Traits
 
-You can use the following traits to extend the functionality of your classes:
+You can use the following traits to extend the functionality of this library:
 
-- [AutoInstantiable](src/python_middlewareable/traits/auto_instantiable)
+- [AutoStructurable](src/python_middlewareable/traits/auto_structurable)
 - [DataStructurable](src/python_middlewareable/traits/data_structurable)
 
 ## License
