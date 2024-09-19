@@ -15,7 +15,7 @@ pip install python-middlewareable
 ```python
 @dataclass
 class Request(RequestBase): # inherit from RequestBase
-    name: str
+    value: str
 ```
 
 ### 2. Create a middleware
@@ -24,13 +24,18 @@ class Request(RequestBase): # inherit from RequestBase
 class OneMiddleware(MiddlewareBase[Request]):
     async def handle(
         self, request: Request, next_call: MiddlewareNextCallBase[Request]
-    ) -> None:
-        request.name = request.name + " from OneMiddleware"
+    ) -> Request:
+        # do something before the next middleware
+        request.value = f"Hello, {request.value} from OneMiddleware"
 
-        print("OneMiddleware before")
-        await next_call(request)
+        # call the next middleware
+        result = await next_call(request)
+
+        # do something after the next middleware
         print("OneMiddleware after")
 
+        # return the result
+        return result
 ```
 
 ### 3. Add the `MiddlewareableBase` trait to the class that will use the middlewares
@@ -47,7 +52,7 @@ class App(MiddlewareableBase[Request]):
 app = App()
 
 # process request
-result = await app.process_middlewares(Request(name="Hello"))
+result = await app.process_middlewares(Request(value="Hello"))
 
 # check the result
 print(request)

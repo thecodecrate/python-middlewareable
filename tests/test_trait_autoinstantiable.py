@@ -1,6 +1,6 @@
 import pytest
 from tests.stubs.fake_datastructurable_trait import (
-    PayloadData,
+    RequestData,
     ResponseData,
     Request,
     OneMiddleware,
@@ -29,7 +29,7 @@ async def test_trait_autoinstantiable_instructions():
 
     # process request
     result = await app.process_middlewares_from_payload(
-        data=PayloadData(name="John")
+        data=RequestData(name="John")
     )
 
     assert result.value == "John from OneMiddleware"

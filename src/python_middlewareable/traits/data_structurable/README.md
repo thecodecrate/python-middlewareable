@@ -1,26 +1,31 @@
 # `DataStructurable` Trait
 
-With this trait, requests become more structured and easier to work with, with distinct attributes for:
+This trait implements an opinionated way to structure the request payload.
 
-- Payload data
+The request payload has the following structure:
+
+- Request data
+  - The original data sent for processing
   - Ex. `{name, age}`
+  - This attribute is immutable and should not be changed
 - Response data
+  - Middlewares modify this attribute to form the final response
   - Ex. `{name: 'John', age: 30}`
 - Transport data
-  - Attributes used by the middlewares to control the flow
+  - Middlewares can use this attribute for flow control
   - Ex. `{status_code: 200, headers: {}}`
 
 ## Usage
 
-### 1. Define the payload structure
+### 1. Define a request structure
 
 ```python
 @dataclass
-class PayloadData(RequestDataBase): # inherit from RequestDataBase
+class RequestData(RequestDataBase): # inherit from RequestDataBase
     name: str
 ```
 
-### 2. Define the response structure
+### 2. Define a response structure
 
 ```python
 @dataclass
@@ -33,7 +38,7 @@ class ResponseData(ResponseDataBase):  # inherit from ResponseDataBase
 ```python
 @dataclass
 class Request(
-    DataStructurableRequestMixin[PayloadData, ResponseData, TransportDataBase],
+    DataStructurableRequestMixin[RequestData, ResponseData, TransportDataBase],
     RequestBase,
 ):
     pass
@@ -54,10 +59,10 @@ The trait adds the following attributes to `Request`:
 class OneMiddleware(MiddlewareBase[Request]):
     async def handle(
         self, request: Request, next_call: MiddlewareNextCallBase[Request]
-    ) -> None:
-        request.response_data.value += request.request_data.name + " from OneMiddleware"
+    ) -> Request:
+        request.response_data.value = request.request_data.name + " from OneMiddleware"
 
-        await next_call(request)
+        return await next_call(request)
 ```
 
 ### 5. Add `DataStructurable` to the middlewareable
@@ -75,8 +80,8 @@ app = App()
 
 # request
 request = Request(
-    request_data=PayloadData(name="John"),
-    response_data=ResponseData(),
+    request_data=RequestData(name="John"),
+    response_data=ResponseData(value=""),
     transport_data=TransportDataBase(),
 )
 
@@ -88,7 +93,7 @@ print(result)
 
 # output:
 # Request(
-#   request_data=PayloadData(name='John'),
+#   request_data=RequestData(name='John'),
 #   response_data=ResponseData(value='John from OneMiddleware'),
 #   transport_data=TransportDataBase()
 # )
