@@ -26,6 +26,9 @@ class OneMiddleware(MiddlewareBase[Request]):
         self, request: Request, next_call: MiddlewareNextCallBase[Request]
     ) -> Request:
         # do something before the next middleware
+        print("OneMiddleware before")
+
+        # modify the request
         request.value = f"Hello, {request.value} from OneMiddleware"
 
         # call the next middleware
