@@ -8,19 +8,19 @@ from tests.stubs.fake_datastructurable_trait import (
 from python_middlewareable import (
     MiddlewareableBase,
     TransportDataBase,
-    AutoInstantiable,
+    AutoStructurable,
 )
 
 
 @pytest.mark.asyncio
-async def test_trait_autoinstantiable_instructions():
+async def test_trait_autostructurable_instructions():
     class App(
-        AutoInstantiable[Request, ResponseData, TransportDataBase],
+        AutoStructurable[Request, ResponseData, TransportDataBase],
         MiddlewareableBase[Request],
     ):
         middlewares = [OneMiddleware]
 
-        # same classes passed to "AutoInstantiable" above
+        # same classes passed to "AutoStructurable" above
         request_class = Request
         response_data_class = ResponseData
         transport_data_class = TransportDataBase

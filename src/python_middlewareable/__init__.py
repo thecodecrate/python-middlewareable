@@ -15,7 +15,7 @@ from .traits.data_structurable.dtos.response_data import (
 from .traits.data_structurable.dtos.transport_data import (
     TransportData as TransportDataBase,
 )
-from .traits.auto_instantiable.auto_instantiable import AutoInstantiable
+from .traits.auto_structurable.auto_structurable import AutoStructurable
 
 # Version of the package
 # DO NOT MODIFY MANUALLY
@@ -36,6 +36,6 @@ __all__ = [
     "RequestDataBase",
     "ResponseDataBase",
     "TransportDataBase",
-    # `AutoInstantiable` trait
-    "AutoInstantiable",
+    # `AutoStructurable` trait
+    "AutoStructurable",
 ]
