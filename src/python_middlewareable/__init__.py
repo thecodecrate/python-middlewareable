@@ -1,21 +1,23 @@
-from .middleware import Middleware as MiddlewareBase
-from .middleware import MiddlewareNextCall as MiddlewareNextCallBase
-from .request import Request as RequestBase
-from .middlewareable import Middlewareable as MiddlewareableBase
-from .traits.data_structurable.data_structurable import DataStructurable
-from .traits.data_structurable.mixins.request_mixin import (
-    RequestMixin as DataStructurableRequestMixin,
+from .classes.middleware_pipeline import (
+    MiddlewarePipeline,
 )
-from .traits.data_structurable.dtos.request_data import (
-    RequestData as RequestDataBase,
+from .classes.middleware_pipeline_interface import (  # noqa
+    MiddlewarePipelineInterface,
 )
-from .traits.data_structurable.dtos.response_data import (
-    ResponseData as ResponseDataBase,
+from .classes.middleware_stage import MiddlewareStage
+from .classes.middleware_stage_interface import (  # noqa
+    MiddlewareStageInterface,
 )
-from .traits.data_structurable.dtos.transport_data import (
-    TransportData as TransportDataBase,
+from .classes.types import MiddlewareNextCall
+from .classes.middleware_callable import (
+    MiddlewareCallable,
 )
-from .traits.auto_structurable.auto_structurable import AutoStructurable
+from .classes.middleware_processor import (
+    MiddlewareProcessor,
+)
+from .classes.middleware_processor_interface import (  # noqa
+    MiddlewareProcessorInterface,
+)
 
 # Version of the package
 # DO NOT MODIFY MANUALLY
@@ -26,16 +28,13 @@ __version__ = "1.0.0"
 
 __all__ = [
     # Core
-    "MiddlewareBase",
-    "MiddlewareNextCallBase",
-    "MiddlewareableBase",
-    "RequestBase",
-    # `DataStructurable` trait
-    "DataStructurable",
-    "DataStructurableRequestMixin",
-    "RequestDataBase",
-    "ResponseDataBase",
-    "TransportDataBase",
-    # `AutoStructurable` trait
-    "AutoStructurable",
+    "MiddlewarePipeline",
+    "MiddlewarePipelineInterface",
+    "MiddlewareProcessor",
+    "MiddlewareProcessorInterface",
+    "MiddlewareStage",
+    "MiddlewareStageInterface",
+    # Types
+    "MiddlewareCallable",
+    "MiddlewareNextCall",
 ]

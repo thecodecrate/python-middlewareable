@@ -3,11 +3,14 @@ channels:
   - defaults
   - conda-forge
 dependencies:
-  - python=3.11
+  - python=3.13
   - pip
   - pip:
+    # code dependencies
+    - thecodecrate-pipeline
     # jupyter
     - ipykernel
+    - debugpy
     # test suite: pytest
     - pytest
     - pytest-asyncio
