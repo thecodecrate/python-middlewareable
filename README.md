@@ -10,19 +10,43 @@ pip install thecodecrate-middlewareable
 
 ## Middleware Pattern
 
-The middleware pattern allows you to wrap and compose functions, enabling concerns like logging, authentication, and more to be added transparently.
+The middleware pattern allows you to easily compose sequential stages by chaining stages.
 
-In this implementation, the core interfaces consist of:
+In this implementation, the interfaces consist of two parts:
 
 - `MiddlewareStage`
 - `MiddlewarePipeline`
-- `MiddlewareProcessor`
 
-A `MiddlewarePipeline` processes a payload through a series of middleware functions or stages. Each middleware receives the payload and a `next_call` function, which it can call to pass control to the next middleware in the chain.
+A pipeline consists of zero, one, or multiple stages. A pipeline can process a payload. During the processing, the payload will be passed to the first stage. From that moment on, the resulting value is passed on from stage to stage.
+
+This particular implementation is build on top of the `thecodecrate-pipeline` library, which provides a generic pipeline pattern.
+
+The standard processor in _TheCodeCrate's Pipeline_ executes stages in a for-loop manner:
+
+```python
+result = payload
+
+for stage in stages:
+    result = stage(result)
+
+return result
+```
+
+However, this library provides a middleware processor for executing stages in a nested manner:
+
+```python
+stage3 = lambda payload: payload + 3
+stage2 = lambda payload: stage3(payload) + 2
+stage1 = lambda payload: stage2(payload) + 1
+
+result = stage1(payload)
+```
+
+This is useful for implementing a chain of responsibility, where each stage can perform pre-processing, post-processing, or modify the payload.
 
 ## Usage
 
-You can define middleware as callables that accept a payload and a `next_call` function:
+You define middleware as callables that accept a `payload` and a `next_call` function:
 
 ```python
 # Define middleware functions
@@ -44,7 +68,11 @@ async def middleware_two(payload, next_call):
     return result
 
 # Create a middleware pipeline
-pipeline = MiddlewarePipeline().pipe(middleware_one).pipe(middleware_two)
+pipeline = (
+    MiddlewarePipeline()
+    .pipe(middleware_one)
+    .pipe(middleware_two)
+)
 
 # Process a payload
 result = await pipeline.process(5)
@@ -53,7 +81,7 @@ print(f"Result: {result}")
 
 **Output:**
 
-```
+```plaintext
 Middleware One - Before
 Middleware Two - Before
 Middleware Two - After
@@ -82,7 +110,7 @@ print(f"Result: {result}")
 
 ## Integration with TheCodeCrate Pipeline
 
-`thecodecrate-middlewareable` is designed as a processor for the `thecodecrate-pipeline` library, allowing seamless integration and enhanced functionality.
+Middlewareable is designed as a processor for the `thecodecrate-pipeline` library, allowing seamless integration and enhanced functionality.
 
 ```python
 from thecodecrate_pipeline import Pipeline
@@ -98,16 +126,25 @@ pipeline = Pipeline(processor=MiddlewareProcessor()).pipe(middleware_stage)
 result = await pipeline.process(5)
 ```
 
+For proper type-hinting, use the `MiddlewarePipeline` class:
+
+```python
+...
+# Create a pipeline with the middleware processor
+pipeline = MiddlewarePipeline(processor=MiddlewareProcessor()).pipe(middleware_stage)
+result = await pipeline.process(5)
+```
+
 ## Declarative Middleware
 
 You can declare middleware stages directly in your pipeline class:
 
 ```python
 class MyMiddlewarePipeline(MiddlewarePipeline[int, int]):
-    stages = [
+    stages = (
         middleware_one,
         middleware_two,
-    ]
+    )
 
 # Use the declarative pipeline
 pipeline = MyMiddlewarePipeline()
