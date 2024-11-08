@@ -62,17 +62,7 @@ result = await pipeline.process(5)
 print(f"Result: {result}")
 ```
 
-This pipeline processes the payload `5` through the following stages:
-
-1. Add 1: `5 + 1 = 6`
-2. Multiply by 2: `6 * 2 = 12`
-3. Add 3: `12 + 3 = 15`
-
-**Output:**
-
-```plaintext
-Result: 15
-```
+## Middleware Functions
 
 With middlewares, you can include pre-processing and post-processing logic:
 
