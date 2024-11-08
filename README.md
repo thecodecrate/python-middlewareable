@@ -62,6 +62,12 @@ result = await pipeline.process(5)
 print(f"Result: {result}")
 ```
 
+**Output:**
+
+```plaintext
+Result: 15
+```
+
 ## Middleware Functions
 
 With middlewares, you can include pre-processing and post-processing logic:
