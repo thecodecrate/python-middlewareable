@@ -1,6 +1,6 @@
 # TheCodeCrate's Middlewareable
 
-This package provides a middleware pattern implementation built on top of the [`thecodecrate-pipeline`](https://pypi.org/project/thecodecrate-pipeline/) library.
+This package provides a middleware pattern implementation built on top of the [`thecodecrate-pipeline`](https://github.com/thecodecrate/python-pipeline) library.
 
 ## Installation
 
@@ -21,7 +21,7 @@ A pipeline consists of zero, one, or multiple stages. A pipeline can process a p
 
 This particular implementation is build on top of the `thecodecrate-pipeline` library, which provides a generic pipeline pattern.
 
-The standard processor in _TheCodeCrate's Pipeline_ executes stages in a for-loop manner:
+The standard processor in Pipeline executes stages in a for-loop manner:
 
 ```python
 result = payload
@@ -32,7 +32,7 @@ for stage in stages:
 return result
 ```
 
-However, this library provides a middleware processor for executing stages in a nested manner:
+This library provides a middleware processor for executing stages in a nested manner:
 
 ```python
 stage3 = lambda payload: payload + 3
@@ -46,7 +46,35 @@ This is useful for implementing a chain of responsibility, where each stage can 
 
 ## Usage
 
-You define middleware as callables that accept a `payload` and a `next_call` function:
+You define middleware as callables that accept a payload and a `next_call` function:
+
+```python
+# Create a middleware pipeline using lambda functions
+pipeline = (
+    MiddlewarePipeline[int]()
+    .pipe(lambda x, next_call: next_call(x + 1))
+    .pipe(lambda x, next_call: next_call(x * 2))
+    .pipe(lambda x, next_call: next_call(x + 3))
+)
+
+# Process a payload
+result = await pipeline.process(5)
+print(f"Result: {result}")
+```
+
+This pipeline processes the payload `5` through the following stages:
+
+1. Add 1: `5 + 1 = 6`
+2. Multiply by 2: `6 * 2 = 12`
+3. Add 3: `12 + 3 = 15`
+
+**Output:**
+
+```plaintext
+Result: 15
+```
+
+With middlewares, you can include pre-processing and post-processing logic:
 
 ```python
 # Define middleware functions
@@ -95,7 +123,7 @@ You can also define middleware as classes by implementing the `MiddlewareStage` 
 
 ```python
 class AddMiddleware(MiddlewareStage[int, int]):
-    async def __call__(self, payload: int, next_call: MiddlewareNextCall[int, int]) -> int:
+    async def __call__(self, payload: int, next_call: MiddlewareNextCall) -> int:
         print("AddMiddleware - Before")
         payload += 3
         result = await next_call(payload)
